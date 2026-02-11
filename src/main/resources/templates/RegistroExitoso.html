@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{Layout :: layout(~{::content})}">
+    <head>
+        <title>Registro Exitoso</title>
+    </head>
+    <body>
+        <div th:fragment="content">
+            <div class="row justify-content-center">
+                <div class="col-lg-6 col-md-8">
+                    <div class="card">
+                        <div class="card-body text-center p-5">
+                            <div class="mb-4">
+                                <i class="fas fa-check-circle text-success" style="font-size: 5rem;"></i>
+                            </div>
+
+                            <h3 class="mb-4">¡Registro Exitoso!</h3>
+
+                            <div class="alert alert-success" role="alert">
+                                <p th:text="${mensaje}"></p>
+                            </div>
+
+                            <p class="mb-4">
+                                Hemos enviado un correo de verificación a: 
+                                <br>
+                                <strong th:text="${correo}"></strong>
+                            </p>
+
+                            <div class="alert alert-warning" role="alert">
+                                <i class="fas fa-info-circle"></i>
+                                <strong>Importante:</strong> Revisa tu bandeja de entrada y tu carpeta de spam.
+                                El enlace de verificación expira en 24 horas.
+                            </div>
+
+                            <div class="d-grid gap-2 mt-4">
+                                <a href="/reenviar-verificacion" class="btn btn-outline-primary" data-mdb-ripple-init>
+                                    <i class="fas fa-envelope"></i> Reenviar correo de verificación
+                                </a>
+                                <a href="/" class="btn btn-primary" data-mdb-ripple-init>
+                                    <i class="fas fa-home"></i> Volver al inicio
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
