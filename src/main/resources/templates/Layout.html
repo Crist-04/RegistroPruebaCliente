@@ -15,13 +15,22 @@
                 <a class="navbar-brand" href="/">
                     <i class="fas fa-user-shield"></i> Sistema de Registro
                 </a>
+                <div class="navbar-nav ms-auto">
+                    <a class="nav-link" href="/usuario/registro">
+                        <i class="fas fa-user-plus"></i> Registrar Usuario
+                    </a>
+                    <a class="nav-link active" href="/usuario/lista">
+                        <i class="fas fa-users"></i> Listar Usuarios
+                    </a>
+                </div>
             </div>
         </nav>
 
         <!-- Contenido -->
-        <div class="container mt-5">
-            <div th:replace="~{::content}"></div>
-        </div>
+        <main>
+            <div layout:fragment="content">
+            </div>
+        </main>
 
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/7.1.0/mdb.umd.min.js"></script>
     </body>

@@ -1,10 +1,12 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" th:replace="~{Layout :: layout(~{::content})}">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
     <head>
         <title>Lista de Usuarios</title>
     </head>
     <body>
-        <div th:fragment="content">
+        <div layout:fragment="content">
             <div class="card">
                 <div class="card-body">
                     <h3 class="card-title mb-4">
@@ -21,7 +23,6 @@
                                     <th>Correo</th>
                                     <th>Teléfono</th>
                                     <th>Estado</th>
-                                    <th>Acciones</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -38,11 +39,6 @@
                                         <span th:unless="${usuario.isVerified == 1}" class="badge badge-warning">
                                             <i class="fas fa-clock"></i> Pendiente
                                         </span>
-                                    </td>
-                                    <td>
-                                        <button type="button" class="btn btn-sm btn-primary" data-mdb-ripple-init>
-                                            <i class="fas fa-eye"></i>
-                                        </button>
                                     </td>
                                 </tr>
                             </tbody>

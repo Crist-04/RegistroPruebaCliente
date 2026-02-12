@@ -2,9 +2,13 @@ package com.example.registropruebacliente.Controller;
 
 import com.example.registropruebacliente.ML.Result;
 import com.example.registropruebacliente.ML.Usuario;
+import java.util.ArrayList;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -28,6 +32,28 @@ public class UsuarioController {
 //    public String Registrar() {
 //        return "redirect:/registro";
 //    }
+    @GetMapping("/lista")
+    public String ListaUsuarios(Model model) {
+        try {
+            String url = baseUrl + "/api/usuario/lista";
+
+            ResponseEntity<List<Usuario>> response = restTemplate.exchange(url, HttpMethod.GET, null, new ParameterizedTypeReference<List<Usuario>>() {
+            });
+
+            List<Usuario> usuarios = response.getBody();
+
+            model.addAttribute("usuarios", usuarios != null ? usuarios : new ArrayList<>());
+            model.addAttribute("titulo", "Lista de Usuarios");
+            return "MostrarUsuarios";
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            model.addAttribute("error", "Error al mostrar usuarios" + ex.getLocalizedMessage());
+            model.addAttribute("usuarios", new ArrayList<>());
+            model.addAttribute("titulo", "Lista de Usuarios");
+            return "MostrarUsuarios";
+        }
+    }
 
     @GetMapping("/registro")
     public String RegistrarForm(Model model) {
