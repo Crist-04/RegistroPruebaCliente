@@ -1,9 +1,12 @@
 package com.example.registropruebacliente.Controller;
 
+import com.example.registropruebacliente.ML.LoginRequest;
 import com.example.registropruebacliente.ML.Result;
 import com.example.registropruebacliente.ML.Usuario;
+import jakarta.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
@@ -32,6 +35,67 @@ public class UsuarioController {
 //    public String Registrar() {
 //        return "redirect:/registro";
 //    }
+    @GetMapping("/login")
+    public String mostrarLogin(HttpSession session, Model model) {
+        Usuario usuarioSesion = (Usuario) session.getAttribute("usuario");
+        if (usuarioSesion != null) {
+            return "redirect:/usuario/lista";
+        }
+
+        model.addAttribute("loginRequest", new LoginRequest());
+        return "Login";
+    }
+
+    @PostMapping("/login")
+    public String procesarLogin(@ModelAttribute LoginRequest loginRequest, HttpSession session, Model model) {
+        try {
+            String url = baseUrl + "/api/usuario/login";
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+
+            HttpEntity<LoginRequest> request = new HttpEntity<>(loginRequest, headers);
+
+            ResponseEntity<Result> response = restTemplate.postForEntity(url, request, Result.class);
+            Result result = response.getBody();
+
+            if (result != null && result.correct) {
+                Map<String, Object> userData = (Map<String, Object>) result.data;
+
+                Usuario usuario = new Usuario();
+                usuario.setIdUsuario((Integer) userData.get("idUsuario"));
+                usuario.setUsername((String) userData.get("username"));
+                usuario.setNombre((String) userData.get("nombre"));
+                usuario.setApellidoPaterno((String) userData.get("apellidoPaterno"));
+                usuario.setApellidoMaterno((String) userData.get("apellidoMaterno"));
+                usuario.setCorreo((String) userData.get("correo"));
+                usuario.setTelefono((String) userData.get("telefono"));
+                usuario.setIsVerified((Integer) userData.get("isVerified"));
+
+                session.setAttribute("usuario", usuario);
+
+
+                return "redirect:/usuario/lista";
+            } else {
+                model.addAttribute("error", result != null ? result.errorMessage : "Error desconocido");
+                model.addAttribute("loginRequest", loginRequest);
+                return "Login";
+            }
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            model.addAttribute("error", "Error al conectar con el servidor: " + ex.getMessage());
+            model.addAttribute("loginRequest", loginRequest);
+            return "Login";
+        }
+    }
+
+    @GetMapping("/logout")
+    public String logout(HttpSession session) {
+        session.invalidate();
+        return "redirect:/usuario/login";
+    }
+
     @GetMapping("/lista")
     public String ListaUsuarios(Model model) {
         try {
