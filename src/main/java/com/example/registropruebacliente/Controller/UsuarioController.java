@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
 
 @Controller
@@ -73,7 +74,6 @@ public class UsuarioController {
                 usuario.setIsVerified((Integer) userData.get("isVerified"));
 
                 session.setAttribute("usuario", usuario);
-
 
                 return "redirect:/usuario/lista";
             } else {
@@ -156,6 +156,50 @@ public class UsuarioController {
             model.addAttribute("titulo", "Registro de Usuario");
             return "RegistrarUsuario";
         }
+    }
+
+    @GetMapping("/reenviarVerificacion")
+    public String mostrarReenviarVerificacion(Model model) {
+        model.addAttribute("titulo", "Reenviar Verificación");
+        return "ReenviarVerificacion";
+    }
+
+    @PostMapping("/reenviarVerificacion")
+    public String reenviarVerificacion(@RequestParam String correo, Model model) {
+        try {
+            String url = baseUrl + "/api/usuario/reenviarVerificacion?correo=" + correo;
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+
+            ResponseEntity<Result> response = restTemplate.exchange(
+                    url,
+                    HttpMethod.POST,
+                    HttpEntity.EMPTY,
+                    new ParameterizedTypeReference<Result>() {
+            }
+            );
+
+            Result result = response.getBody();
+
+            if (result != null && result.correct) {
+                model.addAttribute("mensaje", "Correo reenviado exitosamente");
+                model.addAttribute("tipo", "success");
+            } else {
+                String error = result != null ? result.errorMessage : "Error al reenviar";
+                model.addAttribute("mensaje", error);
+                model.addAttribute("tipo", "error");
+            }
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            model.addAttribute("mensaje", "Error: " + ex.getMessage());
+            model.addAttribute("tipo", "error");
+        }
+
+        model.addAttribute("correo", correo);
+        model.addAttribute("titulo", "Reenviar Verificación");
+        return "ReenviarVerificacion";
     }
 
 }

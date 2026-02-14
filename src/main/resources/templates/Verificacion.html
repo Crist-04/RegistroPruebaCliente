@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{Layout}">
+    <head>
+        <title>Verificación de Cuenta</title>
+    </head>
+    <body>
+        <div layout:fragment="content">
+            <div class="container mt-5">
+                <div class="row justify-content-center">
+                    <div class="col-lg-6 col-md-8">
+                        <div class="card">
+                            <div class="card-body text-center p-5">
+
+                                <div class="mb-4">
+                                    <i th:if="${tipo == 'success'}" 
+                                       class="fas fa-check-circle text-success" 
+                                       style="font-size: 5rem;"></i>
+                                    <i th:unless="${tipo == 'success'}" 
+                                       class="fas fa-times-circle text-danger" 
+                                       style="font-size: 5rem;"></i>
+                                </div>
+
+                                <h3 class="mb-4" th:text="${mensaje}">Mensaje</h3>
+
+                                <div th:if="${descripcion}"
+                                     th:class="${'alert alert-' + (tipo == 'success' ? 'success' : 'danger')}" 
+                                     role="alert">
+                                    <p th:text="${descripcion}"></p>
+                                </div>
+
+                                <div class="d-grid gap-2 mt-4">
+                                    <a th:if="${tipo == 'success'}" 
+                                       href="/usuario/login" 
+                                       class="btn btn-primary btn-lg" 
+                                       data-mdb-ripple-init>
+                                        <i class="fas fa-sign-in-alt"></i> Iniciar Sesión
+                                    </a>
+
+                                    <a th:unless="${tipo == 'success'}" 
+                                       href="/usuario/reenviarVerificacion" 
+                                       class="btn btn-warning btn-lg" 
+                                       data-mdb-ripple-init>
+                                        <i class="fas fa-envelope"></i> Reenviar Correo
+                                    </a>
+
+                                    <a href="/usuario/registro" 
+                                       class="btn btn-outline-secondary" 
+                                       data-mdb-ripple-init>
+                                        <i class="fas fa-arrow-left"></i> Volver
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
